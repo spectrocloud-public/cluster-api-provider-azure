@@ -53,6 +53,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/cache"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
+	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 
@@ -424,6 +425,20 @@ func main() {
 
 	if webhookPort == 0 {
 		registerControllers(ctx, mgr)
+		// Controller-only process (webhooks run in the dedicated webhook deployment).
+		// The webhook StartedChecker would start the webhook server and require a
+		// serving cert that isn't mounted here, so register a basic ping instead —
+		// the pod's /healthz and /readyz probes still need a handler or they 404 and
+		// kubelet CrashLoops the pod. Mirrors the core CAPI fork fix (202b738725).
+		setupLog.V(0).Info("webhook is disabled, registering ping health checks")
+		if err := mgr.AddReadyzCheck("ping", healthz.Ping); err != nil {
+			setupLog.Error(err, "unable to create ready check")
+			os.Exit(1)
+		}
+		if err := mgr.AddHealthzCheck("ping", healthz.Ping); err != nil {
+			setupLog.Error(err, "unable to create health check")
+			os.Exit(1)
+		}
 	} else {
 		registerWebhooks(mgr)
 	}

@@ -346,9 +346,15 @@ func validateManagedClusterNetwork(cli client.Client, labels map[string]string, 
 		Name:      clusterName,
 	}
 
+	// PIVOT/ORDERING TOLERANCE (Spectro fork carry — restored from origin/spectro-master commit
+	// 2c4e2633). Do NOT hard-fail when the owner Cluster cannot be resolved: during clusterctl move
+	// (Palette pivot) and early AKS create the owner Cluster may not be present yet. Upstream returns
+	// field.InternalError here, which makes the AzureManagedControlPlane validation webhook DENY the
+	// create/update — blocking pivot and AKS provisioning. The working v1.18 fork skips network
+	// validation in that case (validate only when the owner resolves). Same class as the
+	// AzureMachine defaulting pivot bypass (5353432cb7).
 	if err := cli.Get(ctx, key, ownerCluster); err != nil {
-		allErrs = append(allErrs, field.InternalError(field.NewPath("Cluster", "spec", "clusterNetwork"), err))
-		return allErrs
+		return nil
 	}
 
 	clusterNetwork := ownerCluster.Spec.ClusterNetwork

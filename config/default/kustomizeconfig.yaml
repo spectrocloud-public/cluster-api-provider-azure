@@ -1,3 +1,8 @@
+# ORPHANED (Spectro fork): referenced by NO kustomization on this branch — not part of
+# any `kustomize build` output, on this branch or on pre-upgrade spectro-master. Kept
+# for historical reference only. The deployable equivalent (where still relevant) lives
+# in palette config/vendorcrd/azure/ (palette-extras.yaml / global kustomization
+# patches). Do not extend — new fork-only manifest changes go in config/spectro/.
 # This configuration is for teaching kustomize how to update name ref and var substitution
 varReference:
 - kind: Deployment

@@ -1,0 +1,24 @@
+# Spectro fork overlay — upstream config/default + fork-only changes. See README.md.
+# Upstream config/** stays pristine; ALL future fork-only manifest changes land here
+# (or in spectro-extras.yaml), never in the upstream directories.
+#
+# NOTE: the fork's CRD schema additions are NOT patched here — config/crd/bases is
+# generated from the fork's Go types and already carries them. Their canonical
+# encoding for palette's vendorcrd-sync is ./crd-patch.yaml.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- ../default
+# Fork-only resources not present upstream (analogous to palette's
+# palette-extras.yaml). Uncomment when the file gains its first resource:
+# - spectro-extras.yaml
+
+# Fork-only patches to upstream resources go here, e.g.:
+# patches:
+# - target:
+#     kind: Deployment
+#     name: capz-controller-manager
+#   patch: |-
+#     - op: add
+#       path: /spec/template/spec/containers/0/args/-
+#       value: --some-fork-flag

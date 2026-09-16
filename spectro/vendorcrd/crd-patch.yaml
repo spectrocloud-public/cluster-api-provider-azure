@@ -1,0 +1,90 @@
+# Fork-only CAPZ CRD schema additions, layered onto the UPSTREAM CRDs by palette
+# vendorcrd-sync at sync time (the fork ships no release manifest). This is the ONLY
+# artifact vendorcrd-sync reads from the fork.
+#
+# Derived from `git diff v1.26.0 -- config/crd/bases/` (purely additive: 4 CRDs, 19 ops).
+# Regenerate/validate with `make vendorcrd-crd-patch` after each CAPZ bump.
+#
+# JSON6902 (not strategic-merge): the additions live under spec.versions[] (a list with
+# a name merge-key kustomize SMP can't merge) and include enum appends (role: all) which
+# SMP would replace wholesale. All target the sole served version, versions[0] (v1beta1).
+patches:
+- target:
+    kind: CustomResourceDefinition
+    name: azureclusters.infrastructure.cluster.x-k8s.io
+  patch: |
+    - op: add
+      path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/networkSpec/properties/apiServerLB/properties/ipAllocationMethod
+      value: {type: string}
+    - op: add
+      path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/networkSpec/properties/apiServerLB/properties/privateIP
+      value: {type: string}
+    - op: add
+      path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/networkSpec/properties/controlPlaneOutboundLB/properties/ipAllocationMethod
+      value: {type: string}
+    - op: add
+      path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/networkSpec/properties/controlPlaneOutboundLB/properties/privateIP
+      value: {type: string}
+    - op: add
+      path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/networkSpec/properties/nodeOutboundLB/properties/ipAllocationMethod
+      value: {type: string}
+    - op: add
+      path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/networkSpec/properties/nodeOutboundLB/properties/privateIP
+      value: {type: string}
+    - op: add
+      path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/networkSpec/properties/subnets/items/properties/role/enum/-
+      value: all
+    - op: add
+      path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/bastionSpec/properties/azureBastion/properties/subnet/properties/role/enum/-
+      value: all
+- target:
+    kind: CustomResourceDefinition
+    name: azureclustertemplates.infrastructure.cluster.x-k8s.io
+  patch: |
+    - op: add
+      path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/template/properties/spec/properties/networkSpec/properties/apiServerLB/properties/ipAllocationMethod
+      value: {type: string}
+    - op: add
+      path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/template/properties/spec/properties/networkSpec/properties/apiServerLB/properties/privateIP
+      value: {type: string}
+    - op: add
+      path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/template/properties/spec/properties/networkSpec/properties/controlPlaneOutboundLB/properties/ipAllocationMethod
+      value: {type: string}
+    - op: add
+      path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/template/properties/spec/properties/networkSpec/properties/controlPlaneOutboundLB/properties/privateIP
+      value: {type: string}
+    - op: add
+      path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/template/properties/spec/properties/networkSpec/properties/nodeOutboundLB/properties/ipAllocationMethod
+      value: {type: string}
+    - op: add
+      path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/template/properties/spec/properties/networkSpec/properties/nodeOutboundLB/properties/privateIP
+      value: {type: string}
+    - op: add
+      path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/template/properties/spec/properties/networkSpec/properties/subnets/items/properties/role/enum/-
+      value: all
+    - op: add
+      path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/template/properties/spec/properties/bastionSpec/properties/azureBastion/properties/subnet/properties/role/enum/-
+      value: all
+- target:
+    kind: CustomResourceDefinition
+    name: azuremanagedcontrolplanes.infrastructure.cluster.x-k8s.io
+  patch: |
+    - op: add
+      path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/aadProfile/properties/enableAzureRBAC
+      value:
+        description: EnableAzureRBAC - Whether to enable Azure RBAC for Kubernetes authorization.
+        type: boolean
+    - op: add
+      path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/fqdnSubdomain
+      value:
+        description: FqdnSubdomain - FQDN subdomain specified when creating private cluster with custom private dns zone.
+        type: string
+- target:
+    kind: CustomResourceDefinition
+    name: azuremanagedcontrolplanetemplates.infrastructure.cluster.x-k8s.io
+  patch: |
+    - op: add
+      path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/template/properties/spec/properties/aadProfile/properties/enableAzureRBAC
+      value:
+        description: EnableAzureRBAC - Whether to enable Azure RBAC for Kubernetes authorization.
+        type: boolean

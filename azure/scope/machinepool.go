@@ -241,6 +241,21 @@ func (m *MachinePoolScope) Name() string {
 	return m.AzureMachinePool.Name
 }
 
+// Location returns the AzureMachinePool's location, normalized for the AzureSecret emulator.
+// Spectro fork carry (restored from origin/spectro-master commit 363e2980): MachinePoolScope must
+// override the embedded ClusterScoper's Location() so region normalization keys off the POOL's own
+// Spec.Location, not the cluster's. Guarded identically to the cluster / managed-control-plane scopes:
+// only AzureUSSecretCloud with a .scombine.scloud resource-manager endpoint is normalized; every other
+// cloud returns Spec.Location unchanged. Dropped during the v1.26 reconcile (the sibling scopes kept
+// their override; MachinePoolScope did not).
+func (m *MachinePoolScope) Location() string {
+	if m.CloudEnvironment() == "AzureUSSecretCloud" &&
+		strings.Contains(m.BaseURI(), ".scombine.scloud") {
+		return azureutil.NormalizeAzureRegion(m.AzureMachinePool.Spec.Location)
+	}
+	return m.AzureMachinePool.Spec.Location
+}
+
 // SetInfrastructureMachineKind sets the infrastructure machine kind in the status if it is not set already, returning
 // `true` if the status was updated. This supports MachinePool Machines.
 func (m *MachinePoolScope) SetInfrastructureMachineKind() bool {

@@ -25,7 +25,6 @@ import (
 	"golang.org/x/crypto/ssh"
 	kerrors "k8s.io/apimachinery/pkg/util/errors"
 	"k8s.io/apimachinery/pkg/util/uuid"
-	clusterv1 "sigs.k8s.io/cluster-api/api/core/v1beta2"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	infrav1 "sigs.k8s.io/cluster-api-provider-azure/api/v1beta1"
@@ -174,24 +173,17 @@ func SetDefaultsAzureMachine(m *infrav1.AzureMachine, client client.Client) erro
 		errs = append(errs, errors.Wrap(err, "failed to set default SSH public key"))
 	}
 
-	// Fetch the Cluster.
-	clusterName, ok := m.Labels[clusterv1.ClusterNameLabel]
-	if !ok {
-		errs = append(errs, errors.Errorf("failed to fetch ClusterName for AzureMachine %s/%s", m.Namespace, m.Name))
-	}
-
-	ownerAzureClusterName, ownerAzureClusterNamespace, err := GetOwnerAzureClusterNameAndNamespace(client, clusterName, m.Namespace, 5)
-	if err != nil {
-		errs = append(errs, errors.Wrapf(err, "failed to fetch owner cluster for AzureMachine %s/%s", m.Namespace, m.Name))
-	}
-
-	subscriptionID, err := GetSubscriptionID(client, ownerAzureClusterName, ownerAzureClusterNamespace, 5)
-	if err != nil {
-		errs = append(errs, errors.Wrapf(err, "failed to fetch subscription ID for AzureMachine %s/%s", m.Namespace, m.Name))
-	}
-
+	// PIVOT WORKAROUND (Spectro fork carry — restored from spectro-master / origin commit 3f82514c).
+	// The AzureMachine defaulting webhook must NOT hard-fail when the owner Cluster/AzureCluster
+	// cannot be resolved. During `clusterctl move` (Palette pivot) the target-side AzureMachine is
+	// created BEFORE its owner Cluster/AzureCluster is moved, so GetOwnerAzureClusterNameAndNamespace
+	// and GetSubscriptionID cannot resolve and the webhook would deny the create with
+	// "failed to fetch owner cluster / subscription ID for AzureMachine ...", blocking the pivot.
+	// The working v1.18 fork bypasses the lookups here and defaults identity with an empty
+	// subscription ID; the controller resolves the real subscription ID at reconcile time.
+	// Do not re-enable the lookups without an alternative that tolerates the pivot ordering.
 	SetDefaultAzureMachineSpecDataDisks(&m.Spec)
-	SetDefaultAzureMachineSpecIdentity(&m.Spec, subscriptionID)
+	SetDefaultAzureMachineSpecIdentity(&m.Spec, "")
 	setDefaultAzureMachineSpecSpotEvictionPolicy(&m.Spec)
 	setDefaultAzureMachineSpecDiagnostics(&m.Spec)
 	SetDefaultAzureMachineSpecNetworkInterfaces(&m.Spec)

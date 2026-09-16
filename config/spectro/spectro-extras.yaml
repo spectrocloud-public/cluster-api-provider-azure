@@ -1,0 +1,6 @@
+# Fork-only resources NOT present upstream (analogous to palette's
+# config/vendorcrd/azure/global/palette-extras.yaml). Currently empty.
+#
+# To add the first resource: put the manifest below (separated by `---`) and
+# uncomment `- spectro-extras.yaml` in ./kustomization.yaml. An empty file must
+# stay UNREFERENCED — kustomize rejects resource files with no documents.

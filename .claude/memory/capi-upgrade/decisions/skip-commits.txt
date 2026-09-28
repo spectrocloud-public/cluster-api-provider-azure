@@ -1,0 +1,11 @@
+# ── INPUT (Gate-1, you edit) — SHAs to SKIP / drop. One SHA per line; '#' = comment. See ../README.md ──
+
+# ── reviewer-applied: pure go.mod/go.sum CVE dep bumps superseded by CVE Gate G ──
+# CVE Gate G on the executed branch re-scans (govulncheck/bulwark) and bumps deps to remediate;
+# these older bumps only add noise (go.mod/go.sum conflicts that need manual resolution)
+# without contributing anything Gate G won't redo. Landing them is not needed for correctness.
+79f5be32
+d3e72af4
+45c6fc69
+cb5b4b16
+5f44feb4

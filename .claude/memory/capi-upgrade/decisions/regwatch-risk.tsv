@@ -1,0 +1,40 @@
+# ── INPUT (Gate-1, you edit) — Regression-Watch risk: <sha> <L|M|H> [note]. unset=REVIEW (blocks execute); High=sign-off. '#' = comment. See ../README.md ──
+# ── reviewer-applied: first-plan risk seeding for the 33 REGWATCH candidates.
+# Rationale per row; H entries need explicit human sign-off before execute (--check-regwatch blocks).
+
+# PICK-VERIFY entries — clean apply but touch upstream-changed/F4-hotspot paths.
+248e1eb1	H	controller/webhook separation — main.go / webhook-namespace pattern; upstream v1.26.0 relocated webhooks to internal/webhooks; verify override still works
+16ca18d3	M	AKS isVnetManaged + caching — azure/scope/cluster.go; verify cache invalidation semantics vs v1.26 refactors
+a8ff143f	M	PEM-484 privatednszone — azure/defaults.go azure/scope/cluster.go; parity with upstream private-DNS handling
+adb3f75a	L	revert of PEM-483 privatednszone — pairs with 72906f59 (revert-of-revert = reapply)
+72906f59	L	revert-of-revert of PEM-483 — effectively reapply; net a8ff143f-style change
+e176e7db	M	fix private dns issue — azure/defaults.go azure/scope/cluster.go; verify no drift vs upstream privatednszones flow
+8b5ab295	M	lowercase providerID RG — azure/services/scalesets + util/azure; verify cloud-provider-azure alignment
+363e2980	M	Location mapping for AzureSecret — azure/scope/machinepool.go + managedcontrolplane.go; feature parity
+c42079f9	M	enhanced VM deletion check — azure/services/async/async.go; verify async-error semantics unchanged upstream
+4f838de6	M	azuremachine_controller final fix — controllers path; verify against upstream controller shape
+9c0457e2	L	remove unnecessary file changes — cleanup only
+4693ac4e	M	Change fix to service level — controllers/azuremachine_controller; parity check
+
+# MIXED entries — split: regen the generated part, PICK the code part (human).
+42eb65da	M	Added Spectro Manifests — MOSTLY REGEN via vendorcrd-sync (per Spec Patch F); code half may be webhook/controller wiring
+0cb06ceb	M	Validation disabled AMCP — spectro/global patches (REGEN) + exp/api webhook stub; verify webhook validation still needed
+15a9f3a5	M	Windows OSType support — azure/types.go real code + spectro/global (REGEN)
+7b180e1d	M	AKS static placement cross-RG — mixed CRD + code
+debee817	M	Fixed osType issue — mixed CRD + code
+1c224e7f	M	subnetName spec for azure machine pool — mixed CRD + code
+5fb2ad0a	M	Use same subnet cp/workers — mixed CRD + code
+aece2202	H	UserAssignedIdentities on AMCP — identity/security-sensitive; parity-critical
+55d361d7	M	OutboundType on AMCP — networking-sensitive
+e2975f92	H	PCP-1467 UserAssignedIdentities Fix — identity/security follow-up
+15ec55de	M	PCP-1595/1596 fix — mixed CRD + code
+a06f259d	M	AKS UpgradeChannels — lifecycle; verify vs upstream channel handling
+82068390	H	disableLocalAccounts — security-sensitive AKS setting
+70464cd1	M	Azure gov env for managed cluster — env boundary; verify parity
+f51b1c5e	M	Additional Changes & Fixes — omnibus, requires careful diff review
+79c0d269	M	Manifest Fixes — mixed CRD (REGEN) + mock updates
+aaba2a2e	M	Manifest Fixes II — kustomization + webhook patches
+aa405349	M	Remove extra exp files — path cleanup; verify no live code lost
+07619357	M	Manifest Changes — ASO CRD (REGEN) + spectro/global
+604a2909	M	Fix Spectro Manifest Generation Script — MOSTLY REGEN; contains run.sh + AKS cilium CNI code
+24708cad	H	enableAzureRBAC on aadProfile — security-sensitive (Azure RBAC)

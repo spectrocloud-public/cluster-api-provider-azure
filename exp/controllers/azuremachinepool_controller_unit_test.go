@@ -50,7 +50,8 @@ func Test_newAzureMachinePoolService(t *testing.T) {
 	clusterMock.EXPECT().BaseURI().AnyTimes()
 	clusterMock.EXPECT().CloudEnvironment().AnyTimes()
 	clusterMock.EXPECT().Token().AnyTimes()
-	clusterMock.EXPECT().Location().Return(cluster.Spec.Location)
+	// MachinePoolScope overrides the embedded ClusterScoper's Location() (spectro fork carry in
+	// azure/scope/machinepool.go), so the scoper's Location() is no longer called on this path.
 	clusterMock.EXPECT().HashKey().Return("fakeCluster")
 	clusterMock.EXPECT().CloudEnvironment().AnyTimes()
 	clusterMock.EXPECT().Token().AnyTimes()

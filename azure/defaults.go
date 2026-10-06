@@ -401,16 +401,27 @@ func ARMClientOptions(azureEnvironment string, extraPolicies ...policy.Policy) (
 	return opts, nil
 }
 
+// CustomCloudConfiguration resolves a cloud environment registered at runtime (for example
+// AzureUSSecretCloud, loaded from the azure-capz-env-config ConfigMap by scope.InitializeAzureConfigForCluster)
+// and returns its SDK v2 cloud configuration together with its VM DNS suffix.
+func CustomCloudConfiguration(environmentName string) (cloud.Configuration, string, error) {
+	env, err := azureautorest.EnvironmentFromName(environmentName)
+	if err != nil {
+		return cloud.Configuration{}, "", fmt.Errorf("environment %q not found: %w", environmentName, err)
+	}
+	return cloudConfigurationFromEnvironment(env), env.ResourceManagerVMDNSSuffix, nil
+}
+
 // getCloudConfigurationFromEnvironment converts a dynamically loaded environment
 // to the new Azure SDK v2 cloud configuration format.
 // Must have this, since we are using the new SDK v2.
 func getCloudConfigurationFromEnvironment(environmentName string) (cloud.Configuration, error) {
-	env, err := azureautorest.EnvironmentFromName(environmentName)
-	if err != nil {
-		return cloud.Configuration{}, fmt.Errorf("environment %q not found: %w", environmentName, err)
-	}
+	cloudConfig, _, err := CustomCloudConfiguration(environmentName)
+	return cloudConfig, err
+}
 
-	// Convert from old SDK v1 format to new SDK v2 format.
+// cloudConfigurationFromEnvironment converts an old SDK v1 environment to the new SDK v2 format.
+func cloudConfigurationFromEnvironment(env azureautorest.Environment) cloud.Configuration {
 	return cloud.Configuration{
 		ActiveDirectoryAuthorityHost: env.ActiveDirectoryEndpoint,
 		Services: map[cloud.ServiceName]cloud.ServiceConfiguration{
@@ -431,7 +442,7 @@ func getCloudConfigurationFromEnvironment(environmentName string) (cloud.Configu
 				Audience: fmt.Sprintf("https://%s", env.StorageEndpointSuffix),
 			},
 		},
-	}, nil
+	}
 }
 
 // correlationIDPolicy adds the "x-ms-correlation-request-id" header to requests.

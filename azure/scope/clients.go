@@ -156,8 +156,18 @@ func (c *AzureClients) getSettingsFromEnvironment(environmentName string) error 
 	case azure.USGovernmentCloudName:
 		cloudConfig = cloud.AzureGovernment
 		c.ResourceManagerVMDNSSuffix = "cloudapp.usgovcloudapi.net"
+	case azure.AzSecretCloudName:
+		// Not built in to SDKv2. The endpoints are registered at runtime from the
+		// azure-capz-env-config ConfigMap (see InitializeAzureConfigForCluster).
+		secretCloudConfig, vmDNSSuffix, err := azure.CustomCloudConfiguration(environmentName)
+		if err != nil {
+			return fmt.Errorf("cloud environment %q is not registered, check the %s ConfigMap in the cluster namespace: %w",
+				environmentName, AzureEnvConfigMapName, err)
+		}
+		cloudConfig = secretCloudConfig
+		c.ResourceManagerVMDNSSuffix = vmDNSSuffix
 	default:
-		return fmt.Errorf("invalid cloud environment name %q", c.CloudEnvironment())
+		return fmt.Errorf("invalid cloud environment name %q", environmentName)
 	}
 
 	c.cloudEnvironment = environmentName

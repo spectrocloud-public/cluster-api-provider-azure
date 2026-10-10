@@ -1,0 +1,76 @@
+# ── INPUT (Gate-1, you edit) — SHAs to SKIP / drop. One SHA per line; '#' = comment. See ../README.md ──
+# M*/CVE/go-version noise — pure go.mod/go.sum/Dockerfile/workflow bumps, superseded by
+# target v1.13.3 (go 1.25.0) and reconstructed by the Patch-D build-green loop + Patch-G CVE gate
+# on the execute branch. Verified: each touches ONLY dependency/build files, no fork .go code.
+5f44feb4  # reviewer-applied: M* pure go.mod/go.sum vuln bump; superseded by target deps + CVE gate
+79f5be32  # reviewer-applied: M* PCP-6137 go.mod/go.sum CVE bump; superseded by target deps + CVE gate
+d3e72af4  # reviewer-applied: M* PCP-6137 go.mod/go.sum CVE bump; superseded by target deps + CVE gate
+d0610cb2  # reviewer-applied: M* PCP-6734 go-version bump (workflow/Dockerfile/go.mod); superseded by target go 1.25.0
+45c6fc69  # reviewer-applied: M* PCP-6734 go.mod/go.sum vuln bump; superseded by target deps + CVE gate
+cb5b4b16  # reviewer-applied: M* PCP-6787 go.mod/go.sum CVE bump; superseded by target deps + CVE gate
+22c3de30  # reviewer-applied: M* PCP-6959 go-version bump (workflow/Makefile/go.mod); superseded by target go 1.25.0
+
+# ── reviewer-applied round-3: parity-verified flips (evidence: notes/parity/v1.26.0-parity.md + notes/commits/<sha>.md) ──
+8b5ab295  # reviewer-applied: upstreamed — v1.26.0 lowercases providerID RGs natively (azprovider, scalesets.go)
+16ca18d3  # reviewer-applied: upstreamed/superseded — isVnetManaged caching in target; residual superseded by APIServerILB
+aef95617  # reviewer-applied: superseded + dead code — zero consumers on fork
+1c224e7f  # reviewer-applied: upstreamed — subnetName native on AMMP at target
+70464cd1  # reviewer-applied: upstreamed — mirrors kubernetes-sigs#3509 (571b77166e), ancestor of fork-point and v1.26.0
+f51b1c5e  # reviewer-applied: superseded — v1.18-rebase build-repair megacommit; only novelty is dead FilterByKeyPrefix
+aa405349  # reviewer-applied: superseded — cancelling pair with 70464cd1/f51b1c5e resurrections
+79c0d269  # reviewer-applied: superseded/REGEN — generated CRDs/manifests (vendorcrd-sync + make generate)
+aaba2a2e  # reviewer-applied: superseded/REGEN — generated manifests
+07619357  # reviewer-applied: superseded/REGEN — generated manifests
+3f82514c  # reviewer-applied: superseded-as-patch — folded into private-LB cascade net form
+2c4e2633  # reviewer-applied: superseded-as-patch — folded into managedclusters/webhook net form
+9b1db285  # reviewer-applied: superseded — comment removal on superseded code
+93449d5c  # reviewer-applied: abandoned — picking creates empty exp/api .go file -> build break
+6d749add  # reviewer-applied: superseded by 45d9bb84 (intermediate comment-out)
+94233eeb  # reviewer-applied: superseded — v1.26.0 on controller-runtime v0.23.3; conflicted webhook files deleted at target
+0cb06ceb  # reviewer-applied: superseded — AMCP validation not disabled anymore; spectro yaml is regen
+15a9f3a5  # reviewer-applied: upstreamed — OSType on ammp/amcp; drop dead struct in azure/types.go
+debee817  # reviewer-applied: superseded/REGEN — v1alpha4 CRD, API gone at target
+858364c5  # reviewer-applied: upstreamed — osType default now in upstream AMMP webhook
+7b180e1d  # reviewer-applied: upstreamed — vnet.resourceGroup cross-RG placement
+55d361d7  # reviewer-applied: upstreamed — outboundType (upstream adds immutability webhook)
+a06f259d  # reviewer-applied: upstreamed — AKS UpgradeChannels (upstream 631a4b27c5, same author)
+82068390  # reviewer-applied: upstreamed — disableLocalAccounts incl. token-based kubeconfig
+d8e1ce40  # reviewer-applied: upstreamed — Status.AutoUpgradeVersion + GetHigherK8sVersion
+f1abc73a  # reviewer-applied: upstreamed — v1.26.0 converter has OsSKU (upstream 6080b8a197)
+0fc4e9d8  # reviewer-applied: superseded-as-dead — computeDiff machinery commented out at S (spec.go:762-816)
+a2b1a593  # reviewer-applied: superseded-as-dead — computeDiff cascade
+1c814218  # reviewer-applied: superseded-as-dead — computeDiff cascade
+e2975f92  # reviewer-applied: superseded-as-dead — computeDiff cascade (PCP-1467; see aece2202 open question)
+efd40404  # reviewer-applied: superseded-as-dead — computeDiff cascade
+cb8ef8b4  # reviewer-applied: superseded — typo fix in rewritten file
+# ── reviewer-applied round-3: folded-into-unit (content carried by the unit root's PICK-RESOLVE net-diff) ──
+5e819cea  # reviewer-applied: folded into 248e1eb1 main.go unit
+f9cfc76b  # reviewer-applied: folded into 248e1eb1 main.go unit (--metrics-bind-addr MUST survive; palette passes it)
+adb3f75a  # reviewer-applied: folded into a8ff143f private-DNS unit
+72906f59  # reviewer-applied: folded into a8ff143f private-DNS unit
+e176e7db  # reviewer-applied: folded into a8ff143f private-DNS unit (net: 3-arg GeneratePrivateFQDN + getHostName)
+32e8a1f1  # reviewer-applied: folded into e8b25112 location-mapping unit
+2d63d1f9  # reviewer-applied: folded into e8b25112 location-mapping unit
+363e2980  # reviewer-applied: folded into e8b25112 location-mapping unit
+8c6bd5fa  # reviewer-applied: folded into 601023f0 private-cluster LB-IP unit
+c7b9d887  # reviewer-applied: folded into 601023f0 unit (frontend-ip check absorbed in net)
+b80d4dfe  # reviewer-applied: folded into 601023f0 unit (nil guards absorbed in net)
+3d6a0310  # reviewer-applied: folded into 601023f0 unit (middle-link over-removal; never pick alone)
+1b4fdec4  # reviewer-applied: folded into ee19ef20 AzureSecret #117 unit
+fde3f374  # reviewer-applied: folded into ee19ef20 AzureSecret #117 unit
+a0e29487  # reviewer-applied: folded into ee19ef20 unit (net-zero reversal pair)
+7a89534e  # reviewer-applied: folded into ee19ef20 unit (net-zero reversal pair)
+7f0e76c4  # reviewer-applied: folded into ee19ef20 unit (net-zero reversal pair)
+b7f8d03b  # reviewer-applied: folded into ee19ef20 unit (net-zero reversal pair)
+cfabdbf5  # reviewer-applied: folded into ee19ef20 unit (net-zero reversal pair)
+50c8656c  # reviewer-applied: folded into ee19ef20 unit (net-zero reversal pair)
+c1a28ceb  # reviewer-applied: folded into ee19ef20 AzureSecret #117 unit
+b86eb725  # reviewer-applied: folded into ee19ef20 AzureSecret #117 unit
+eb14c310  # reviewer-applied: folded into ee19ef20 AzureSecret #117 unit
+f918f3cf  # reviewer-applied: folded into ee19ef20 unit (ConfigMap pivot — core of net)
+d13d31d0  # reviewer-applied: folded into ee19ef20 AzureSecret #117 unit
+c95a3413  # reviewer-applied: folded into ee19ef20 AzureSecret #117 unit
+e5e74b7c  # reviewer-applied r3: decoupling-only patch; content carried by e8b25112 location-mapping unit net-diff
+# ── human decisions 2026-07-16 (Gate-1): the two open NEEDS-DECISION rows ──
+aece2202  # human decision: DROP — PCP-1467 UAI plumbing is dead on fork (scope populates, spec never consumes); Palette side not wiring it
+604a2909  # human decision: DROP — AMCP/AMMP webhook removal was a hand-edit to generated manifests.yaml; not carrying (make generate at target restores upstream state)

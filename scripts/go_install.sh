@@ -45,6 +45,12 @@ rm "${GOBIN}/${2}"* 2> /dev/null || true
 # the newer Go version needed to process this project's source files.
 if [ -f go.mod ]; then
   toolchain=$(sed -n 's/^toolchain //p' go.mod)
+  if [ -z "${toolchain}" ]; then
+    go_version=$(sed -n 's/^go //p' go.mod)
+    if [ -n "${go_version}" ]; then
+      toolchain="go${go_version}"
+    fi
+  fi
   if [ -n "${toolchain}" ]; then
     export GOTOOLCHAIN="${toolchain}"
   fi

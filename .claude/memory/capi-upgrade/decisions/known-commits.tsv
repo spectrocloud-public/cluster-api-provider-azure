@@ -1,0 +1,23 @@
+# ── INPUT (Gate-1, you edit) — authoritative SHA->category map: <sha> <category> [decision]. '#' = comment. See ../README.md ──
+# ad0f208f is titled "PEM-2613: Fix Cipher Suit issue" — despite the security-fix title it is NOT
+# CVE noise: it adds a TLS cipher-suite / MinVersion hardening block (crypto/tls TLSOptions) to
+# main.go. Pin it F4 so a future --skip-noise cannot mistake it for a droppable M* bump.
+ad0f208f	F4	SKIP	# reviewer-applied r3: folded into 248e1eb1 main.go unit — TLS block carried in the unit net-diff; go.mod/go.sum hunks are replay junk. NOT droppable noise.
+# ── reviewer-applied round-3: unit roots + re-targeted carries (see notes/parity/v1.26.0-parity.md) ──
+248e1eb1	F4	PICK-RESOLVE	# reviewer-applied: unit root — main.go split-pod net-diff incl. 5e819cea/f9cfc76b/ad0f208f; webhook-port default 0 is load-bearing
+a8ff143f	F4	PICK-RESOLVE	# reviewer-applied: unit root — private-DNS chain net (PEM-483/484); re-target moved defaults; resolve from current armnetwork state
+e8b25112	F4	PICK-RESOLVE	# reviewer-applied: unit root — ussec->eastus2 location mapping (guarded: AzureUSSecretCloud + .scombine.scloud only)
+601023f0	F4	PICK-RESOLVE	# reviewer-applied: unit root — private-cluster LB-IP dynamic read-back; REPLACE upstream validateAPIServerLB immutability with Static-conditioned check; re-inline read-back loop
+ee19ef20	F4	PICK-RESOLVE	# reviewer-applied: unit root — AzureSecret #117 chain as ONE net-diff (reversal pairs + unreplayable merge 2071dd28 inside)
+b3a9f3b5	F4	PICK-RESOLVE	# reviewer-applied: REGENERATE ForStandard bodies from v1.26.0 (fork copies are frozen v1.18!); keep AzureSecret guards + TLS fix only
+f1f1ebc2	F4	PICK-RESOLVE	# reviewer-applied: SetEnvironment race lock for multiple controllers
+e3c6f868	F4	PICK-RESOLVE	# reviewer-applied: re-target to internal/webhooks/azuremanagedcontrolplane_validation.go (api/v1beta1 file deleted at target — dead-path trap)
+45d9bb84	F4	PICK-RESOLVE	# reviewer-applied: re-target to internal/webhooks/azureimage_validation.go (dual-gallery relaxation; dead-path trap)
+24708cad	F4	PICK-RESOLVE	# reviewer-applied: enableAzureRBAC MUST-CARRY (PCP-6412) — v1.26.0 still hardcodes EnableAzureRBAC=AADProfile.Managed
+15ec55de	F4	PICK-RESOLVE	# reviewer-applied: carry FqdnSubdomain slice ONLY (fork-only field); DNSPrefix/privateDNSZone upstreamed; drop DockerBridgeCidr
+9972a7a1	F4	PICK-RESOLVE	# reviewer-applied: SP-auth warning suppression — re-apply in the 3 azurejson controllers
+1a8918cf	F4	PICK-RESOLVE	# reviewer-applied: FIPS Dockerfile/Makefile at S-tip state; bump TAG v1.18.0->v1.26.0
+364fe27b	F4	PICK-RESOLVE	# reviewer-applied: dockerfile dedup at S-tip state
+fc3e22b4	F4	PICK-RESOLVE	# reviewer-applied: autobackport workflow; .gitignore union
+42eb65da	F4	PICK-RESOLVE	# reviewer-applied: carry spectro/ + config/default generator INPUTS; generated outputs via vendorcrd-sync + make generate (Patch F)
+5fb2ad0a	F4	PICK-RESOLVE	# reviewer-applied: SubnetAll role — palette profiles emit it; must survive

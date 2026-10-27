@@ -1,0 +1,57 @@
+# ── INPUT (Gate-1, you edit) — Regression-Watch risk: <sha> <L|M|H> [note]. unset=REVIEW (blocks execute); High=sign-off. '#' = comment. See ../README.md ──
+# Risk basis: fork-commit diffstat vs upstream F..T divergence on the same files (git diff 1957fc65 v1.26.0 -- <path>).
+# H = upstream heavily reworked the same file AND fork logic is safety-critical / net-regression-prone → explicit human parity sign-off.
+# M = shared file with moderate divergence; verify at execute. L = generated (regenerated deterministically) or file barely changed upstream.
+248e1eb1	M	# main.go webhook/controller separation; upstream reworked main.go +96/-51; follow-ups 5e819cea/f9cfc76b are NEEDS-DECISION so separation lands half-applied — human must confirm wiring # human sign-off 2026-07-16: reapply logic from commit summary
+a8ff143f	M	# PEM-484 privatednszone in azure/defaults.go where upstream removed -50 lines; re-adding fork private-DNS defaults may regress upstream rework (the "#24 would REGRESS" pattern) # human sign-off 2026-07-16: reapply logic from commit summary
+adb3f75a	L	# reviewer-applied r3: folded into a8ff143f unit — sign-off happens on the root
+72906f59	L	# reviewer-applied r3: folded into a8ff143f unit — sign-off happens on the root
+e176e7db	L	# reviewer-applied r3: folded into a8ff143f unit — sign-off happens on the root
+70464cd1	L	# reviewer-applied r3: now SKIP — upstreamed (kubernetes-sigs#3509 in fork-point+target)
+f51b1c5e	L	# reviewer-applied r3: now SKIP — superseded v1.18-rebase repair megacommit
+16ca18d3	M	# isVnetManaged + caching, 1 line in azure/scope/cluster.go (upstream +132/-64) — verify hook still valid
+8b5ab295	M	# lowercase providerID RG in scalesets.go (upstream +117/-83) + util/azure — verify against reworked scalesets
+363e2980	M	# location mapping in azure/scope/machinepool.go (upstream +78/-104) + util/azure — verify
+0cb06ceb	M	# AMCP validation-disabled webhook (code) + spectro/generated (regen) — fork behavior; verify webhook still present
+15a9f3a5	M	# windows OSType: azure/types.go +60 (code) + generated CRD (regen)
+1c224e7f	M	# subnetName ammp: small spec.go removal + generated CRD (regen)
+5fb2ad0a	M	# same-subnet cp/workers: api/v1beta1 default+validation code (upstream reworked api) + generated
+aece2202	M	# UserAssignedIdentities AMCP: types_class/scope/spec code + generated CRD
+55d361d7	M	# OutboundType AMCP: spec.go +4 + generated CRD
+e2975f92	M	# UAI Fix: scope/managedcontrolplane + spec.go code
+15ec55de	M	# PCP-1595/1596: api types + scope + spec code + generated CRD
+a06f259d	M	# UpgradeChannels: scope + spec + go.mod + generated CRD
+82068390	M	# disableLocal accounts: large new code (scope/client/token) touching managedclusters (reworked upstream)
+aa405349	M	# removes exp/api AMCP files (-4000); net-removal — review as a unit with 70464cd1/f51b1c5e
+24708cad	M	# enableAzureRBAC aadProfile: api types +4 + scope 1/1 + generated CRD
+7b180e1d	L	# AKS cross-RG static placement: .go are 0/0; effectively generated CRD + spectro/generated (regen)
+debee817	L	# osType issue: generated CRD + conversion 0/0 (regen)
+79c0d269	L	# manifest fixes: generated CRDs + mock (regen)
+aaba2a2e	L	# manifest fixes II: config/* manifests only (regen)
+07619357	L	# manifest changes: generated aso/crds + core-global (regen)
+42eb65da	L	# Added Spectro Manifests: generated CRDs (regen) + additive spectro scaffolding/run.sh
+604a2909	L	# Spectro manifest generation script: generated manifests + spectro/global scripts (regen)
+c42079f9	L	# async vm-deletion logic: async.go (upstream +5/-3) + errors.go (upstream unchanged) — low divergence
+4f838de6	L	# azuremachine_controller async fix (upstream +12/-10 minor)
+9c0457e2	L	# async.go 4/4 minor (upstream +5/-3)
+4693ac4e	L	# service-level fix: reconciler.go new + controller minor
+# ── reviewer-applied round-3: parity-capture additions ──
+e3c6f868	M	# dead-path trap: applies cleanly to DELETED api/v1beta1 file — must re-target internal/webhooks (VNET-RG relaxation) # human sign-off 2026-07-16: reapply logic from commit summary
+45d9bb84	M	# dead-path trap: same — dual-gallery relaxation is repave-class if lost # human sign-off 2026-07-16: reapply logic from commit summary
+24708cad	M	# enableAzureRBAC fork-only must-carry — dropping flips AAD clusters K8s-RBAC->Azure-RBAC (PCP-6412/PWC) # human sign-off 2026-07-16: reapply logic from commit summary
+ee19ef20	M	# AzureSecret #117 unit root — net-diff resolution of 15-commit chain w/ reversals + unreplayable merge # human sign-off 2026-07-16: reapply logic from commit summary
+601023f0	M	# private-cluster LB-IP unit — v1.26.0 validateAPIServerLB immutability would wedge dynamic private clusters # human sign-off 2026-07-16: reapply logic from commit summary
+b3a9f3b5	M	# frozen v1.18 ForStandard bodies — verbatim carry reverts 8 releases of upstream LB/publicIP fixes # human sign-off 2026-07-16: reapply logic from commit summary
+e8b25112	M	# location-mapping unit root — guarded, low blast radius, verify guard conditions survive
+aece2202	M	# OPEN Gate-1 question: PCP-1467 UAI plumbing is dead on fork (scope populates, spec never consumes) — wire or drop
+604a2909	M	# OPEN human call: AMCP/AMMP webhook removal is a hand-edit to GENERATED manifests.yaml; make generate restores — re-implement as kustomize delete-patch if intended
+# ── reviewer-applied round-3b: risks for auto-generated rows on flipped commits ──
+1a8918cf	M	# FIPS Dockerfile at S-tip; mechanical re-target, verify TAG bump at execute
+9972a7a1	M	# warning suppression re-applied in 3 azurejson controllers; behavior-neutral if missed but noisy
+034b0daf	L	# AzureSecret stepping stone; final state owned by ee19ef20 unit (H covers the unit)
+b3215651	L	# AzureSecret stepping stone; final state owned by ee19ef20 unit
+fb81b479	L	# log-statement fix; stepping stone, superseded within unit
+34c9590a	L	# path-reading fix; stepping stone, superseded within unit
+f1f1ebc2	M	# SetEnvironment race lock; concurrency change, verify against v1.26.0 controller startup
+fc3e22b4	L	# CI workflow + .gitignore union; no runtime surface
+364fe27b	L	# Dockerfile dedup at S-tip state; build-only

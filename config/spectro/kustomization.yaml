@@ -22,3 +22,5 @@ resources:
 #     - op: add
 #       path: /spec/template/spec/containers/0/args/-
 #       value: --some-fork-flag
+patches:
+- path: patch_aso_webhook_trim.yaml
